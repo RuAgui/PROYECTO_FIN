@@ -1,0 +1,56 @@
+# --- Unity (mantén Assets/ Packages/ ProjectSettings/) ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+UserSettings/Layouts/    # Puedes borrar esta línea si quieres versionar UserSettings enteros
+
+# Addressables/IL2CPP/Cache
+[Bb]uilds_*/
+[Bb]urstDebugInformation-*/
+**/Il2CppOutputProject/
+**/Bee/
+**/.vs/
+**/.idea/
+**/.vscode/
+
+# Archivos generados por IDEs
+*.csproj
+*.sln
+*.suo
+*.user
+*.unityproj
+*.pidb
+*.svd
+
+# SO / varios
+.DS_Store
+Thumbs.db
+
+# Exportaciones/paquetes/binaries
+*.unitypackage
+*.apk
+*.aab
+*.ipa
+*.exe
+*.app
+*.dmg
+*.msi
+
+*.psd
+*.tga
+*.exr
+*.wav
+*.mp3
+*.ogg
+*.fbx
+*.blend
+*.mp4
+*.mov
+*.zip
+*.unitypackage
+
