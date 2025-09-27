@@ -23,8 +23,6 @@ public class PlayerMovement : MonoBehaviour
         //rb.AddForce(new Vector3(direction.x, 0f, direction.y) * 10f);
         rb.linearVelocity = new Vector3(direction.x, 0f, direction.y) * moveSpeed;
         anim.SetFloat("Run", rb.linearVelocity.magnitude);
-        Debug.Log(rb.linearVelocity.magnitude);
-
     }
 
     private void Update()
