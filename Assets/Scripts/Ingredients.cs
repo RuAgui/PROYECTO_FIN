@@ -2,31 +2,19 @@ using UnityEngine;
 
 public class Ingredients : MonoBehaviour
 {
-   public enum State
-   {
-       Raw,
-       Cooked,
-       Burned,
-       Cut,
-   }
-
-    public enum Type
+    [SerializeField] private State currentState = State.Raw;
+    public enum State
     {
-        Lettuce,
-        Tomato,
-        Cheese,
-        Meat,
-        Bread,
-        Onion,
-        Pickle,
-        None
+        Raw,
+        Cooked,
+        Burned,
+        Cut,
     }
 
-    [SerializeField] public State currentState = State.Raw;
+    public bool IsCut => currentState == State.Cut;
 
     public void SetCut()
     {
         currentState = State.Cut;
-        Debug.Log($"{gameObject.name} is now Cut");
     }
 }

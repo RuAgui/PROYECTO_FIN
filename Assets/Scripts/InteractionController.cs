@@ -13,6 +13,8 @@ public class InteractionController : MonoBehaviour
     [SerializeField] public bool canCut;
     [SerializeField] CuttingStation cuttingStation;
 
+    [SerializeField] public IngredientSO ingredient;
+
     private void Start()
     {
         canUseOven = false;
@@ -46,6 +48,11 @@ public class InteractionController : MonoBehaviour
         }
     }
 
+    public void PickUp()
+    {
+        bool wasPicked = FridgeInventory.instance.Add(ingredient);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         //Estacion corte
@@ -62,6 +69,14 @@ public class InteractionController : MonoBehaviour
             Debug.Log("Player can use oven");
             canUseOven = true;
             ovenDoor = other.gameObject;
+        }
+
+        if (other.CompareTag("Ingredient"))
+        {
+            Debug.Log("Player can pick up ingredient");
+            ingredient = other.GetComponent<IngredientSO>();
+            PickUp();
+            Destroy(other.gameObject);
         }
     }
 

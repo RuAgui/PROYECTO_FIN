@@ -7,6 +7,7 @@ TagManager:
   - Fridge
   - Oven
   - CutStation
+  - Ingredient
   layers:
   - Default
   - TransparentFX
