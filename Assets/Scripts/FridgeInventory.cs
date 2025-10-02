@@ -15,31 +15,24 @@ public class FridgeInventory : MonoBehaviour
             instance = this;
     }
     #endregion
+    private void Start()
+    {
+        //Inventario rellenamos con los objetos que nos da la variable FridgeConfig//
+        items = fridgeConfig.possibleIngredients;
+    }
 
     //Creamos el delegado que vamos a llamar cuando se modifique el inventario
     public delegate void OnItemChanged();
-    public OnItemChanged onItemChangedCallback;
+    public OnItemChanged onItemChangedInvoke;
 
-    [SerializeField] private int space = 6; //Espacio por defecto en la nevera
-    [SerializeField] private List<IngredientSO> items = new List<IngredientSO>(); //Lista de ingredientes en la nevera
+    [SerializeField] public int space = 6; //Espacio por defecto en la nevera
+    [SerializeField] public List<IngredientSO> items = new List<IngredientSO>(); //Lista de ingredientes en la nevera
+    [Header("DATA")]
+    [SerializeField] private FridgeConfig fridgeConfig;
 
-    public bool Add(IngredientSO item)
-    {
-        if (!item) return false; //Si el item es nulo, no se añade
-        if (items.Count >= space)
-        {
-            Debug.Log("Not enough space in the fridge");
-            return false; //No hay espacio
-        }
-        items.Add(item); //Añadimos el item a la lista
-        onItemChangedCallback?.Invoke(); //Llamamos al delegado si no es nulo
-        return true; //Item añadido correctamente
-    }
+    //public bool Add(IngredientSO item)
+    //{
+       
+    //}
 
-    public void Remove(IngredientSO item)
-    {
-        if (item == null) return; //Si el item es nulo, no se elimina
-        items.Remove(item); //Eliminamos el item de la lista
-        onItemChangedCallback?.Invoke(); //Llamamos al delegado si no es nulo
-    }
 }

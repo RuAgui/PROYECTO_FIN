@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2221535806332660365}
   - component: {fileID: 6060446712853759110}
   - component: {fileID: 5108265963848187399}
+  - component: {fileID: 7417029192672489434}
   m_Layer: 5
   m_Name: Slot_Ingredient
   m_TagString: Untagged
@@ -77,6 +78,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7417029192672489434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135370102939260750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c125af04c0df7c4ea8a7d1527530e5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 2146725722986938427}
+  text: {fileID: 942549267192534206}
 --- !u!1 &6275256083018783141
 GameObject:
   m_ObjectHideFlags: 0

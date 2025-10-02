@@ -58,6 +58,6 @@ public class CuttingStation : MonoBehaviour
         if (progressFill) progressFill.fillAmount = cutting;
 
     }
-    public void ExitStation() { if (cuttingProgress) cuttingProgress.SetActive(false); } //Oculto la barra al salir.
+    public void ExitStation() { if (cuttingProgress) cuttingProgress.SetActive(false); ResetProgress(); } //Oculto la barra al salir.
 
 }

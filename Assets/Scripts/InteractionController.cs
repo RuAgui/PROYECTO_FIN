@@ -50,7 +50,7 @@ public class InteractionController : MonoBehaviour
 
     public void PickUp()
     {
-        bool wasPicked = FridgeInventory.instance.Add(ingredient);
+        //bool wasPicked = FridgeInventory.instance.Add(ingredient);
     }
 
     private void OnTriggerEnter(Collider other)
