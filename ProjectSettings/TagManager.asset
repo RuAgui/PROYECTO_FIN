@@ -8,6 +8,10 @@ TagManager:
   - Oven
   - CutStation
   - Ingredient
+  - Crate
+  - Sink
+  - GridFridge
+  - GridBox
   layers:
   - Default
   - TransparentFX

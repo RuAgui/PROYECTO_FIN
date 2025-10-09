@@ -3,36 +3,38 @@ using System.Collections.Generic;
 
 public class FridgeInventory : MonoBehaviour
 {
-    #region Singleton
-        public static FridgeInventory instance;
-        private void Awake()
-        {
-            if (instance != null)
-            {
-                Debug.LogWarning("More than one instance of FridgeInventory found!");
-                return;
-            }
-            instance = this;
+
+    [SerializeField] private FridgeConfig fridgeConfig;
+    [SerializeField] IngredientSO[] possibleIngredients;
+    [SerializeField] List<IngredientSO> ingredientsList;
+    [SerializeField] GameObject ingredientPrefab;
+
+    private Transform gridFridge;
+    private Ingredients ingredients;
+
+    private void Awake()
+    {
+        possibleIngredients = fridgeConfig.possibleIngredients.ToArray();
+        ingredientsList.AddRange(possibleIngredients);
+        gridFridge = GameObject.FindGameObjectWithTag("GridFridge")?.transform;
+        
     }
-    #endregion
+
     private void Start()
     {
-        //Inventario rellenamos con los objetos que nos da la variable FridgeConfig//
-        items = fridgeConfig.possibleIngredients;
+        for (int i = 0; i <= fridgeConfig.offerCount; i++)
+        {
+            int index = Random.Range(0, ingredientsList.Count);
+
+            GameObject spawnIngredient = Instantiate(ingredientPrefab, Vector3.zero, Quaternion.identity, gridFridge);
+
+            ingredients = spawnIngredient.GetComponent<Ingredients>();
+            ingredients.CreateIngredient(ingredientsList[index]);
+
+            //Elimininar el ingrediente seleccionado de la lista para no repetirlo
+            ingredientsList.RemoveAt(index);
+            if (ingredientsList.Count == 0) break;
+        }
+
     }
-
-    //Creamos el delegado que vamos a llamar cuando se modifique el inventario
-    public delegate void OnItemChanged();
-    public OnItemChanged onItemChangedInvoke;
-
-    [SerializeField] public int space = 6; //Espacio por defecto en la nevera
-    [SerializeField] public List<IngredientSO> items = new List<IngredientSO>(); //Lista de ingredientes en la nevera
-    [Header("DATA")]
-    [SerializeField] private FridgeConfig fridgeConfig;
-
-    //public bool Add(IngredientSO item)
-    //{
-       
-    //}
-
 }

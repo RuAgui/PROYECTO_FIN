@@ -7,7 +7,7 @@ public class FridgeConfig : ScriptableObject
     [Header("Ingredientes posibles")]
     public List<IngredientSO> possibleIngredients = new List<IngredientSO>();
 
-    [Header("Oferta y selecion")]
+    [Header("Oferta y seleccion")]
     [Tooltip("Cuantos ingredientes se ofrecen al jugador para elegir")]
     public int offerCount = 6;
 
