@@ -37,6 +37,8 @@ public class InteractionController : MonoBehaviour
             ovenDoor.GetComponent<OvenBehaviour>().Toogle();
             return;
         }
+
+        
     }
 
     public void CanCut()
@@ -97,5 +99,6 @@ public class InteractionController : MonoBehaviour
             canUseOven = false;
             ovenDoor = null;
         }
+        
     }
 }

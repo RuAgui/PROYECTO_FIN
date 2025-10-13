@@ -12,6 +12,8 @@ TagManager:
   - Sink
   - GridFridge
   - GridBox
+  - ButtonConfirm
+  - PanelFridge
   layers:
   - Default
   - TransparentFX
