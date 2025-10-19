@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientName: Onion
   icon: {fileID: 21300000, guid: 626f6f2e44b1bb044b1c5e3ca32a83c9, type: 3}
-  prefab: {fileID: 8221701516503080445, guid: 4714761208ee8d046bc1edabbe551a84, type: 3}
+  prefab: {fileID: 529161491161670772, guid: ab4318bf0e3c46246862f44d667180ef, type: 3}

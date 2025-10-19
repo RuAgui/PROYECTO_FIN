@@ -9,12 +9,15 @@ public class Ingredients : MonoBehaviour
     [SerializeField] private State currentState = State.Raw;
     [SerializeField] private TextMeshProUGUI ingredientName;
     [SerializeField] private Image ingredientImage;
+    [SerializeField] private IngredientSO ingredientSO;
+    [SerializeField] Button buttonIngredient;
 
     private BoxInventory boxInventory;
 
     private void Awake()
     {
         boxInventory = FindFirstObjectByType<BoxInventory>();
+        buttonIngredient = GetComponent<Button>();
     }
 
     public enum State
@@ -36,11 +39,13 @@ public class Ingredients : MonoBehaviour
     {
         ingredientName.text = ingredient.ingredientName;
         ingredientImage.sprite = ingredient.icon;
+
+        ingredientSO = ingredient; //Guardo la referencia al ScriptableObject del ingrediente
     }
 
     public void OnClickIngredient()
     {
-        boxInventory.AddIngredient(ingredientName,ingredientImage);
+        boxInventory.AddIngredient(ingredientSO, buttonIngredient);
     }
 
 }

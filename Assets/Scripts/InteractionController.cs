@@ -14,6 +14,11 @@ public class InteractionController : MonoBehaviour
     [SerializeField] CuttingStation cuttingStation;
 
     [SerializeField] public IngredientSO ingredient;
+    [SerializeField] private PlayerMovement playerMovement;
+
+    [Header("Crate")]
+    [SerializeField] bool canOpenCrate;
+    public CrateInventory crateInventory;
 
     private void Start()
     {
@@ -23,6 +28,7 @@ public class InteractionController : MonoBehaviour
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
+        //CORTAR
         if (context.performed && canCut && cuttingStation != null)
         {
             cuttingStation.AddCutProgress();
@@ -31,14 +37,21 @@ public class InteractionController : MonoBehaviour
             return;
         }
 
+        //HORNO
         if (context.performed && canUseOven && ovenDoor != null)
         {
             Debug.Log("Player use oven");
             ovenDoor.GetComponent<OvenBehaviour>().Toogle();
             return;
-        }
-
+        }   
         
+        //CRATE
+        if (canOpenCrate && crateInventory != null)
+        {
+            Debug.Log("Player open crate");
+            crateInventory.OpenCrateUI();
+            return;
+        }
     }
 
     public void CanCut()
@@ -65,6 +78,7 @@ public class InteractionController : MonoBehaviour
 
             CanCut();
         }
+
         //Si player entra en trigger de la puerta del horno
         if (other.CompareTag("Oven"))
         {
@@ -73,12 +87,11 @@ public class InteractionController : MonoBehaviour
             ovenDoor = other.gameObject;
         }
 
-        if (other.CompareTag("Ingredient"))
+        //ENTEER CRATE
+        if (other.CompareTag("Crate"))
         {
-            Debug.Log("Player can pick up ingredient");
-            ingredient = other.GetComponent<IngredientSO>();
-            PickUp();
-            Destroy(other.gameObject);
+            Debug.Log("Player can open crate");
+            canOpenCrate = true;
         }
     }
 
@@ -99,6 +112,12 @@ public class InteractionController : MonoBehaviour
             canUseOven = false;
             ovenDoor = null;
         }
-        
+
+        //EXIT CRATE
+        if (other.CompareTag("Crate"))
+        {
+            canOpenCrate = false;
+        }
+
     }
 }

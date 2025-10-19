@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientName: Ham
   icon: {fileID: 21300000, guid: f27746a6474c369418934373c25995a8, type: 3}
-  prefab: {fileID: 6124116479213321157, guid: 09cb4c33843d19c4fb140fb448c43841, type: 3}
+  prefab: {fileID: 3582080685916061540, guid: e1c18e1aee35ff34d92248f7fb5757d9, type: 3}

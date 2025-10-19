@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class BoxInventory : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class BoxInventory : MonoBehaviour
     [SerializeField] FridgeConfig fridgeConfig;
     [SerializeField] int maxPick;
     [SerializeField] int pickedCount;
+    [SerializeField] public List<IngredientSO> chosenIngredients = new List<IngredientSO>();
+    [SerializeField] private TextMeshProUGUI ingredientName;
+    [SerializeField] private Image ingredientImage;
+
 
     private Transform gridBox;
 
@@ -17,32 +22,33 @@ public class BoxInventory : MonoBehaviour
         gridBox = GameObject.FindGameObjectWithTag("GridBox")?.transform;
     }
 
-    public void AddIngredient(TextMeshProUGUI ingredientName, Image boxImage)
+    public void AddIngredient(IngredientSO ingredient, Button ButtonBox)
     {
         maxPick = fridgeConfig.selectionCount;
         if (pickedCount < maxPick)
         {
             GameObject pick = Instantiate(ingredientSlot, Vector3.zero, Quaternion.identity, gridBox);
-            
-            pick.GetComponent<Image>().sprite = boxImage.sprite;
-            pick.GetComponentInChildren<TextMeshProUGUI>().text = ingredientName.text;
+
+            pick.GetComponent<Image>().sprite = ingredient.icon;
+            pick.GetComponentInChildren<TextMeshProUGUI>().text = ingredient.ingredientName;
 
             pickedCount++;
             Debug.Log("Picked: " + pickedCount);
 
-            //Cuando un ingrediente es seleccionado, deshabilitar su boton para que no pueda ser seleccionado de nuevo
-            ingredientName.GetComponentInParent<Button>().interactable = false;
+            if (ButtonBox) ButtonBox.interactable = false; //Deshabilito el boton del ingrediente seleccionado para que no se pueda volver a seleccionar
+            chosenIngredients.Add(ingredient); //Aqui guardo los ingredientes elegidos.
 
+            
             //Cuando vuelvo a pulsar el boton del ingrediente seleccionado, se deselecciona y se habilita su boton de nuevo
             pick.GetComponent<Button>().onClick.AddListener(() =>
             {
                 Destroy(pick);
                 pickedCount--;
                 Debug.Log("Picked: " + pickedCount);
-                ingredientName.GetComponentInParent<Button>().interactable = true;
-            });
+                chosenIngredients.Remove(ingredient);
+                if (ButtonBox) ButtonBox.interactable = true;
 
+            });
         }
     }
-
 }

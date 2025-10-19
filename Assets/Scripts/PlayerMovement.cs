@@ -32,10 +32,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        direction = context.ReadValue<Vector2>();
-        
-        Debug.Log(context.ReadValue<Vector2>());
-
+        direction = context.ReadValue<Vector2>();   
     }
 
     public void LookAtMov()

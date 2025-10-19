@@ -5,6 +5,6 @@ public class IngredientSO : ScriptableObject
 {
     [SerializeField] public string ingredientName;
     [SerializeField] public Sprite icon;
-    [SerializeField] private GameObject prefab;
+    [SerializeField] public GameObject prefab;
 }
 

@@ -1,28 +1,28 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.Animations;
-using System.Runtime.CompilerServices;
 
 public class FridgeInventory : MonoBehaviour
 {
 
     [SerializeField] private FridgeConfig fridgeConfig;
-    [SerializeField] IngredientSO[] possibleIngredients;
-    [SerializeField] List<IngredientSO> ingredientsList;
+    [SerializeField] IngredientSO[] spawnIngredients;
     [SerializeField] GameObject ingredientPrefab;
     [SerializeField] PlayerMovement playerMovement;
 
     private Transform gridFridge;
     private GameObject panelFridge;
     private Ingredients ingredients;
+    List<IngredientSO> ingredientsList;
     private void Awake()
     {
-        possibleIngredients = fridgeConfig.possibleIngredients.ToArray();
-        ingredientsList.AddRange(possibleIngredients);
+        if (panelFridge) panelFridge.SetActive(false);
+        if (playerMovement) playerMovement.enabled = false;
+
+        spawnIngredients = fridgeConfig.possibleIngredients.ToArray();
+        ingredientsList = new List<IngredientSO>();
+        ingredientsList.AddRange(spawnIngredients);
         gridFridge = GameObject.FindGameObjectWithTag("GridFridge")?.transform;
         panelFridge = GameObject.FindGameObjectWithTag("PanelFridge");
-        panelFridge.SetActive(false);
-        playerMovement.enabled = false;
 
     }
 
@@ -34,7 +34,7 @@ public class FridgeInventory : MonoBehaviour
     private void GenerateIngredients()
     {
         
-        for (int i = 0; i <= fridgeConfig.offerCount; i++)
+        for (int i = 0; i < fridgeConfig.offerCount && ingredientsList.Count > 0; i++)
         {
             int index = Random.Range(0, ingredientsList.Count);
 
@@ -44,7 +44,7 @@ public class FridgeInventory : MonoBehaviour
             ingredients.CreateIngredient(ingredientsList[index]);
 
             //Elimininar el ingrediente seleccionado de la lista para no repetirlo
-            ingredientsList.Remove(ingredientsList[index]);
+            ingredientsList.RemoveAt(index);
             if (ingredientsList.Count == 0) break;
         }
     }
