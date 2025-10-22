@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientName: Cheese
   icon: {fileID: 21300000, guid: fc098ab7f8baf9d42ac4d829d7fdd47e, type: 3}
-  prefab: {fileID: 1000580715326389718, guid: b6be16be4996ec646ba902b810ffc8ab, type: 3}
+  prefab: {fileID: 699494854182794539, guid: cda0c9fca8b19fe4b957db9765ffbfad, type: 3}

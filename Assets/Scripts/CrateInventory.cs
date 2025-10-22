@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.UI;
 public class CrateInventory : MonoBehaviour
@@ -12,9 +11,7 @@ public class CrateInventory : MonoBehaviour
     [SerializeField] GameObject ingredientPrefab;
     [SerializeField] PlayerMovement playerMovement;
 
-    [Header("Mano player")]
-    [SerializeField] Transform handPlayer;
-
+    public InteractionController interactionController;
     public List<IngredientSO> chosenIngredients = new List<IngredientSO>();
 
     public void SetIngredient(List<IngredientSO> select)
@@ -23,6 +20,12 @@ public class CrateInventory : MonoBehaviour
     }
     public void OpenCrateUI()
     {
+        if (interactionController && interactionController.HasItemInHand)
+        {
+            Debug.Log("No puedes abrir la caja con un ingrediente en la mano");
+            return;
+        }
+
         panelCrate.SetActive(true);
         if (playerMovement) playerMovement.enabled = false;
 
@@ -54,11 +57,12 @@ public class CrateInventory : MonoBehaviour
 
     public void ChooseFromCrate (IngredientSO ingredient)
     {
+        if (interactionController && interactionController.HasItemInHand) return; //Por si acaso
+ 
         chosenIngredients.Remove(ingredient);
+        if (interactionController) interactionController.EquipInHand(ingredient);
+
         CloseCrateUI();
-        panelCrate.SetActive(false);
-        if (playerMovement) playerMovement.enabled = true;
-        EquipInHand(ingredient);
     }
 
     public void CloseCrateUI()
@@ -66,18 +70,4 @@ public class CrateInventory : MonoBehaviour
         panelCrate.SetActive(false);
         if (playerMovement) playerMovement.enabled = true;
     }
-
-    public void EquipInHand(IngredientSO ingredient)
-    {
-        if (!ingredient || !ingredient.prefab || !handPlayer) return;
-
-        //instancio el ingrediente en la mano del player
-       
-        GameObject go = Instantiate(ingredient.prefab, handPlayer);
-        go.transform.localPosition = Vector3.zero;
-        go.transform.localRotation = Quaternion.identity;
-        go.transform.localScale = Vector3.one;
-
-    }
-
 }

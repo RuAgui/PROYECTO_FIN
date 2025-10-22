@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,12 +19,24 @@ public class InteractionController : MonoBehaviour
     [SerializeField] bool canOpenCrate;
     public CrateInventory crateInventory;
 
+    [Header("Hand Player")]
+    [SerializeField] public Transform handPlayer;
+    public bool HasItemInHand => (handPlayer && handPlayer.childCount > 0) || currentGO != null;
+
+    [Header("Current Ingredient")]
+    public IngredientSO currentSO;
+    public GameObject currentGO;
+
+    [SerializeField] RaycastInteract ray;
+
     private void Start()
     {
         canUseOven = false;
         ovenDoor = null;
         canCut = false;
     }
+
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         //CORTAR
@@ -43,15 +54,84 @@ public class InteractionController : MonoBehaviour
             Debug.Log("Player use oven");
             ovenDoor.GetComponent<OvenBehaviour>().Toogle();
             return;
-        }   
-        
+        }
+
         //CRATE
-        if (canOpenCrate && crateInventory != null)
+        if (context.performed && canOpenCrate && crateInventory != null)
         {
+            if (HasItemInHand)
+            {
+                Debug.Log("No puedes abrir la caja con un ingrediente en la mano");
+                return;
+            }
+
             Debug.Log("Player open crate");
             crateInventory.OpenCrateUI();
             return;
         }
+
+        //KITCHEN COUNTER
+        if (context.performed && ray && ray.TryHit<KitchenCounter>(out var lookCounter))
+        {
+            if (HasItemInHand)
+            {
+                if (lookCounter.TryPlaceIngredient(currentSO, currentGO))
+                {
+                    Debug.Log("Placed on counter via raycast: " + lookCounter.name);
+                    currentSO = null;
+                    currentGO = null; // mano vacía
+                }
+                else
+                {
+                    Debug.Log("Counter ocupada o datos nulos.");
+                }
+            }
+            else
+            {
+                if (lookCounter.TryTakeIngredient(out var so, out var itemGO))
+                {
+                    Debug.Log("Took from counter via raycast: " + lookCounter.name);
+                    EquipInHand(so, itemGO); // reparenta, sin clonar
+                }
+                else
+                {
+                    Debug.Log("No hay nada en esa encimera.");
+                }
+            }
+            return;
+        }
+    }
+
+    public void EquipInHand(IngredientSO ingredient, GameObject existing = null)
+    {
+        if (handPlayer == null)
+        {
+            Debug.LogError("No hay 'handPlayer' asignado en el Inspector.");
+            return;
+        }
+
+        GameObject go = existing;
+        if (go == null) 
+        { 
+            go = Instantiate(ingredient.prefab, handPlayer);
+        }
+
+
+        if (go.transform.parent != handPlayer)
+        {
+            for (int i = handPlayer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(handPlayer.GetChild(i).gameObject);
+            }
+        }
+
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localRotation = Quaternion.identity;
+        go.transform.localScale = Vector3.one;
+
+        currentSO = ingredient;
+        currentGO = go;
+
     }
 
     public void CanCut()
@@ -61,11 +141,6 @@ public class InteractionController : MonoBehaviour
             canCut = true;
             cuttingStation.EnterStation();
         }
-    }
-
-    public void PickUp()
-    {
-        //bool wasPicked = FridgeInventory.instance.Add(ingredient);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -118,6 +193,5 @@ public class InteractionController : MonoBehaviour
         {
             canOpenCrate = false;
         }
-
     }
 }

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientName: Potatoes
   icon: {fileID: 21300000, guid: 0dc5e33a2ed23d143bf2ad46d56b0ddb, type: 3}
-  prefab: {fileID: 4713896236553888924, guid: 6763589c73f68f84d9fa57e209a1cd38, type: 3}
+  prefab: {fileID: 2047493635123134676, guid: 600301b52e913a244aa95d0a327b63aa, type: 3}

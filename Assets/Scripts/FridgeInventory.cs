@@ -29,6 +29,7 @@ public class FridgeInventory : MonoBehaviour
     private void Start()
     {
         GenerateIngredients();
+        if (playerMovement) playerMovement.enabled = false;
     }
 
     private void GenerateIngredients()

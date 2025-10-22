@@ -14,6 +14,7 @@ TagManager:
   - GridBox
   - ButtonConfirm
   - PanelFridge
+  - KitchenCounter
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - Water
   - UI
   - Floor
-  - 
-  - 
+  - Interact
+  - Raycast
   - 
   - 
   - 
