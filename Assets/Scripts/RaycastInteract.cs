@@ -4,7 +4,7 @@ using static UnityEngine.UI.Image;
 public class RaycastInteract : MonoBehaviour
 {
    [Header("Raycast")]
-   // [SerializeField] Camera cam;
+    //[SerializeField] Transform rayOrigin;
     [SerializeField] float interactDistance = 2f;
     [SerializeField] LayerMask layerMask;
 

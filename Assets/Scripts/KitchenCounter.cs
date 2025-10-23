@@ -7,7 +7,7 @@ public class KitchenCounter : MonoBehaviour
 
     public bool IsEmpty => anchor && anchor.childCount == 0;
 
-    public bool TryPlaceIngredient(IngredientSO so, GameObject itemGO)
+    public bool PlaceIngredient(IngredientSO so, GameObject itemGO)
     {
         if (!IsEmpty || !so || !itemGO) return false;
 
@@ -19,11 +19,15 @@ public class KitchenCounter : MonoBehaviour
         return true;
     }
 
-    public bool TryTakeIngredient(out IngredientSO so, out GameObject itemGO)
+    public bool TakeIngredient(out IngredientSO so, out GameObject itemGO)
     {
         so = null; itemGO = null;
         if (IsEmpty) return false;
+
         itemGO = anchor.GetChild(0).gameObject;
+        anchor.GetChild(0).SetParent(null, true);
+
+
         so = currentSO;
         currentSO = null;
         return true;

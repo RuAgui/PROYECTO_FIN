@@ -21,7 +21,7 @@ public class InteractionController : MonoBehaviour
 
     [Header("Hand Player")]
     [SerializeField] public Transform handPlayer;
-    public bool HasItemInHand => (handPlayer && handPlayer.childCount > 0) || currentGO != null;
+    public bool HasItemInHand => (handPlayer && handPlayer.childCount > 0);
 
     [Header("Current Ingredient")]
     public IngredientSO currentSO;
@@ -39,6 +39,11 @@ public class InteractionController : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
+        if (!context.performed)
+        {
+            return;
+        }
+
         //CORTAR
         if (context.performed && canCut && cuttingStation != null)
         {
@@ -71,26 +76,34 @@ public class InteractionController : MonoBehaviour
         }
 
         //KITCHEN COUNTER
-        if (context.performed && ray && ray.TryHit<KitchenCounter>(out var lookCounter))
+        if (ray && ray.TryHit<KitchenCounter>(out var counter))
         {
             if (HasItemInHand)
             {
-                if (lookCounter.TryPlaceIngredient(currentSO, currentGO))
+                if (counter.PlaceIngredient(currentSO, currentGO))
                 {
-                    Debug.Log("Placed on counter via raycast: " + lookCounter.name);
+                    Debug.Log("Colocado en: " + counter.name);
                     currentSO = null;
                     currentGO = null; // mano vacía
+
+                    if (handPlayer)
+                    {
+                        for (int i = handPlayer.childCount - 1; i >= 0; i--)
+                        {
+                            Destroy(handPlayer.GetChild(i).gameObject);
+                        }
+                    }
                 }
                 else
                 {
-                    Debug.Log("Counter ocupada o datos nulos.");
+                    Debug.Log("Encimera ocupada o datos nulos.");
                 }
             }
             else
             {
-                if (lookCounter.TryTakeIngredient(out var so, out var itemGO))
+                if (counter.TakeIngredient(out var so, out var itemGO))
                 {
-                    Debug.Log("Took from counter via raycast: " + lookCounter.name);
+                    Debug.Log("Recogido de: " + counter.name);
                     EquipInHand(so, itemGO); // reparenta, sin clonar
                 }
                 else
@@ -116,14 +129,13 @@ public class InteractionController : MonoBehaviour
             go = Instantiate(ingredient.prefab, handPlayer);
         }
 
-
-        if (go.transform.parent != handPlayer)
+        for (int i = handPlayer.childCount - 1; i >= 0; i--)
         {
-            for (int i = handPlayer.childCount - 1; i >= 0; i--)
-            {
+            if (handPlayer.GetChild(i).gameObject != go)
                 Destroy(handPlayer.GetChild(i).gameObject);
-            }
         }
+
+        go.transform.SetParent(handPlayer, false);
 
         go.transform.localPosition = Vector3.zero;
         go.transform.localRotation = Quaternion.identity;
@@ -142,6 +154,75 @@ public class InteractionController : MonoBehaviour
             cuttingStation.EnterStation();
         }
     }
+
+    public void PlaceOnCounter()
+    {
+        if (currentSO == null || currentGO == null) 
+        { 
+            Debug.Log("No hay ingrediente en la mano para colocar en la encimera.");
+            return;
+        }
+
+        if (!ray.TryHit<KitchenCounter>(out var counter))
+        {
+            Debug.Log("No se ha detectado ninguna encimera frente al jugador.");
+            return;
+        }
+
+        if (!counter.IsEmpty)
+        {
+            Debug.Log("La encimera está ocupada.");
+            return;
+        }
+
+        bool placed = counter.PlaceIngredient(currentSO, currentGO);
+        if (!placed)
+        {
+            Debug.Log("No se ha podido colocar el ingrediente en la encimera.");
+            return;
+        }
+
+        currentSO = null;
+        currentGO = null;
+
+        //Por si algun prefab queda suelto, lo destruyo.
+        if (handPlayer && handPlayer.childCount > 0)
+        {
+            for (int i = handPlayer.childCount - 1; i >= 0; i--)
+            {
+                Destroy(handPlayer.GetChild(i).gameObject);
+            }
+        }
+
+        Debug.Log("Ingrediente colocado en la encimera correctamente.");
+    }
+
+    public void TakeFromCounter()
+    {
+        if (currentGO != null || currentSO != null) return;
+        if (!ray.TryHit<KitchenCounter>(out var counter))
+        {
+            Debug.Log("No se ha detectado ninguna encimera.");
+            return;
+        }
+
+        if (counter.IsEmpty)
+        {
+            Debug.Log("La encimera está vacía.");
+            return;
+        }
+
+        if (counter.TakeIngredient(out var so, out var itemGO))
+        {
+            EquipInHand(so, itemGO);
+            Debug.Log("Ingrediente recogido de la encimera correctamente.");
+            return;
+        }
+        
+        //bool taken = counter.TakeIngredient(out var so, out var itemGO);
+    }
+
+
 
     private void OnTriggerEnter(Collider other)
     {
