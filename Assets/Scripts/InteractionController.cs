@@ -27,7 +27,10 @@ public class InteractionController : MonoBehaviour
     public IngredientSO currentSO;
     public GameObject currentGO;
 
+    [Header("Raycast")]
     [SerializeField] RaycastInteract ray;
+
+    public IngredientSO so;
 
     private void Start()
     {
@@ -39,43 +42,90 @@ public class InteractionController : MonoBehaviour
 
     public void OnInteract(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!context.performed) return;
+        Debug.Log("Interactuo");
+
+        // CORTAR
+        if (canCut && cuttingStation != null)
         {
+            if (HasItemInHand && !cuttingStation.HasItemOnStation)
+            {
+                if (cuttingStation.PlaceIngredient(currentGO))
+                {
+                    Debug.Log("[Cut] Ingrediente colocado");
+
+                    // mano vacía
+                    currentGO = null;
+                    currentSO = null;
+                    if (handPlayer)
+                    {
+                        for (int i = handPlayer.childCount - 1; i >= 0; i--)
+                            Destroy(handPlayer.GetChild(i).gameObject);
+                    }
+                }
+                else
+                {
+                    Debug.Log("[Cut] No se pudo colocar (¿anchor asignado? ¿ya hay algo?).");
+                }
+                return;
+            }
+
+            if (!HasItemInHand && cuttingStation.HasItemOnStation)
+            {
+                if (cuttingStation.TakeIngredient(out var itemGO))
+                {
+                    // Saca el SO real desde el componente Ingredients del propio objeto
+                    var ing = itemGO.GetComponentInChildren<Ingredients>(true);
+                    var soTaken = ing != null ? ing.SO : null;
+
+                    EquipInHand(soTaken, itemGO); // reparenta el MISMO GO
+                    Debug.Log("[Cut] Recogido de la estación de corte.");
+                }
+                else
+                {
+                    Debug.Log("[Cut] No hay nada para recoger.");
+                }
+                return;
+            }
+
+            if (cuttingStation.HasItemOnStation)
+            {
+                cuttingStation.AddCutProgress();
+                Debug.Log("Cortando ingrediente...");
+                return;
+            }
+
+            Debug.Log("Mesa vacía y no llevas nada.");
             return;
         }
 
-        //CORTAR
-        if (context.performed && canCut && cuttingStation != null)
-        {
-            cuttingStation.AddCutProgress();
-            Debug.Log("Player cut ingredient");
-
-            return;
-        }
-
-        //HORNO
-        if (context.performed && canUseOven && ovenDoor != null)
+        // HORNO
+        if (canUseOven && ovenDoor != null)
         {
             Debug.Log("Player use oven");
             ovenDoor.GetComponent<OvenBehaviour>().Toogle();
             return;
         }
 
-        //CRATE
-        if (context.performed && canOpenCrate && crateInventory != null)
+        // CRATE
+        if (canOpenCrate && crateInventory != null)
         {
             if (HasItemInHand)
             {
                 Debug.Log("No puedes abrir la caja con un ingrediente en la mano");
                 return;
             }
-
+            if (crateInventory.IsEmpty)
+            {
+                Debug.Log("La caja está vacía.");
+                return;
+            }
             Debug.Log("Player open crate");
             crateInventory.OpenCrateUI();
             return;
         }
 
-        //KITCHEN COUNTER
+        //ENCIMERA por raycast
         if (ray && ray.TryHit<KitchenCounter>(out var counter))
         {
             if (HasItemInHand)
@@ -89,9 +139,7 @@ public class InteractionController : MonoBehaviour
                     if (handPlayer)
                     {
                         for (int i = handPlayer.childCount - 1; i >= 0; i--)
-                        {
                             Destroy(handPlayer.GetChild(i).gameObject);
-                        }
                     }
                 }
                 else
@@ -101,10 +149,10 @@ public class InteractionController : MonoBehaviour
             }
             else
             {
-                if (counter.TakeIngredient(out var so, out var itemGO))
+                if (counter.TakeIngredient(out var soFromCounter, out var itemGO))
                 {
                     Debug.Log("Recogido de: " + counter.name);
-                    EquipInHand(so, itemGO); // reparenta, sin clonar
+                    EquipInHand(soFromCounter, itemGO); // reparenta, sin clonar
                 }
                 else
                 {
@@ -113,6 +161,15 @@ public class InteractionController : MonoBehaviour
             }
             return;
         }
+    }
+
+    public void OnCut(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        Debug.Log("CUT CUT CUT");
+        if (!canCut || cuttingStation == null) return;
+
+        cuttingStation.AddCutProgress();
     }
 
     public void EquipInHand(IngredientSO ingredient, GameObject existing = null)
@@ -193,7 +250,6 @@ public class InteractionController : MonoBehaviour
                 Destroy(handPlayer.GetChild(i).gameObject);
             }
         }
-
         Debug.Log("Ingrediente colocado en la encimera correctamente.");
     }
 
@@ -218,12 +274,7 @@ public class InteractionController : MonoBehaviour
             Debug.Log("Ingrediente recogido de la encimera correctamente.");
             return;
         }
-        
-        //bool taken = counter.TakeIngredient(out var so, out var itemGO);
     }
-
-
-
     private void OnTriggerEnter(Collider other)
     {
         //Estacion corte
@@ -246,8 +297,17 @@ public class InteractionController : MonoBehaviour
         //ENTEER CRATE
         if (other.CompareTag("Crate"))
         {
-            Debug.Log("Player can open crate");
-            canOpenCrate = true;
+            crateInventory = other.GetComponentInParent<CrateInventory>();
+
+            if (crateInventory != null && !crateInventory.IsEmpty)
+            {
+                Debug.Log("Player can open crate");
+                canOpenCrate = true;
+            }
+            else
+            {
+                canOpenCrate = false;
+            }
         }
     }
 
@@ -273,6 +333,7 @@ public class InteractionController : MonoBehaviour
         if (other.CompareTag("Crate"))
         {
             canOpenCrate = false;
+            crateInventory = null;
         }
     }
 }

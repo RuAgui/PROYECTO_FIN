@@ -15,3 +15,7 @@ MonoBehaviour:
   ingredientName: Carrot
   icon: {fileID: 21300000, guid: 7bde3bb791496e645b5da8c4fdbd936f, type: 3}
   prefab: {fileID: 4365938756056509483, guid: c528c569622595044a3cd47fcc04ce57, type: 3}
+  canBeCut: 1
+  canBeBoiled: 1
+  canBeBaked: 0
+  cutsPerStep: 6

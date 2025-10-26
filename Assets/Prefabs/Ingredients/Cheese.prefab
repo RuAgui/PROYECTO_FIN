@@ -47,11 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f56a27f6e6016149b162119320b13d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
   ingredientName: {fileID: 0}
   ingredientImage: {fileID: 0}
   ingredientSO: {fileID: 11400000, guid: 12c689f82ae991940934460c11dc115c, type: 2}
   buttonIngredient: {fileID: 4668094833452399854, guid: e28dcd67f071ecc4db20dc73e3b68eb6, type: 3}
+  states:
+  - {fileID: 4962367875992156053}
+  - {fileID: 2905215152638415456}
+  - {fileID: 3770008455916024459}
+  stateIndex: 0
 --- !u!1 &2905215152638415456
 GameObject:
   m_ObjectHideFlags: 0

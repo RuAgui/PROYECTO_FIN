@@ -15,3 +15,7 @@ MonoBehaviour:
   ingredientName: Potatoes
   icon: {fileID: 21300000, guid: 0dc5e33a2ed23d143bf2ad46d56b0ddb, type: 3}
   prefab: {fileID: 2047493635123134676, guid: 600301b52e913a244aa95d0a327b63aa, type: 3}
+  canBeCut: 1
+  canBeBoiled: 1
+  canBeBaked: 1
+  cutsPerStep: 6

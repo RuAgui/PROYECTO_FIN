@@ -218,8 +218,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f56a27f6e6016149b162119320b13d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
   ingredientName: {fileID: 0}
   ingredientImage: {fileID: 0}
   ingredientSO: {fileID: 11400000, guid: dea4a4b36865ac043a07ed64dfd27ec3, type: 2}
   buttonIngredient: {fileID: 4668094833452399854, guid: e28dcd67f071ecc4db20dc73e3b68eb6, type: 3}
+  states:
+  - {fileID: 1879840523994703074}
+  - {fileID: 4141777892816788976}
+  stateIndex: 0

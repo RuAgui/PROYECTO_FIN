@@ -15,3 +15,7 @@ MonoBehaviour:
   ingredientName: BurguerMeat
   icon: {fileID: 21300000, guid: 1e1935de54939e64dbc0c27643247322, type: 3}
   prefab: {fileID: 8307478973025696446, guid: 0fc3ae9659982e64bb7efa2ed8b1d7d8, type: 3}
+  canBeCut: 0
+  canBeBoiled: 1
+  canBeBaked: 0
+  cutsPerStep: 6

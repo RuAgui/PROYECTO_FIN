@@ -14,6 +14,8 @@ public class CrateInventory : MonoBehaviour
     public InteractionController interactionController;
     public List<IngredientSO> chosenIngredients = new List<IngredientSO>();
 
+    public bool IsEmpty => chosenIngredients.Count == 0;
+
     public void SetIngredient(List<IngredientSO> select)
     {
         chosenIngredients = new List<IngredientSO>(select);
@@ -23,6 +25,12 @@ public class CrateInventory : MonoBehaviour
         if (interactionController && interactionController.HasItemInHand)
         {
             Debug.Log("No puedes abrir la caja con un ingrediente en la mano");
+            return;
+        }
+
+        if (IsEmpty)
+        {
+            panelCrate.SetActive(false);
             return;
         }
 

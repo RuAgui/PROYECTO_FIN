@@ -15,3 +15,7 @@ MonoBehaviour:
   ingredientName: Tomato
   icon: {fileID: 21300000, guid: d8943a57e7a10e04a9746a00a1ca5667, type: 3}
   prefab: {fileID: 5392259958876382224, guid: b7c2c21406adb6845a982cb12dfebdd8, type: 3}
+  canBeCut: 1
+  canBeBoiled: 0
+  canBeBaked: 0
+  cutsPerStep: 6
